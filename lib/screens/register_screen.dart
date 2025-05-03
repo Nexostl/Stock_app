@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _usernameController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _phoneController.text.isEmpty) {
-      _showSnackBar("All fields are required!", Colors.red);
+      _showSnackBar("All fields are required!", const Color(0xFFE57373));
       return;
     }
 
@@ -49,14 +49,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      // Register user with Firebase
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      // Save user details to Firestore
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userCredential.user?.uid)
@@ -66,17 +64,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'phone': _phoneController.text.trim(),
       });
 
-      // Show success message
       _showSnackBar(
-          "Registration Successful! Redirecting to login...", Colors.green);
+          "Registration Successful! Redirecting to login...", const Color(0xFF81C784));
 
-      // Redirect to login after a delay
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushReplacementNamed(context, '/');
       });
     } catch (e) {
-      // Show error message
-      _showSnackBar("Registration Failed: ${e.toString()}", Colors.red);
+      _showSnackBar("Registration Failed: ${e.toString()}", const Color(0xFFE57373));
     } finally {
       setState(() {
         _isLoading = false;
@@ -101,9 +96,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.orange, Colors.red],
+            colors: [
+              const Color(0xFFE0F7FA),
+              const Color(0xFFB2EBF2),
+              const Color(0xFF80DEEA),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -114,11 +113,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                Image.asset(
-                  'assets/appLogo.png',
-                  height: 150,
-                  width: 150,
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    'assets/appLogo.png',
+                    height: 120,
+                    width: 120,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -126,76 +139,138 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Color(0xFF2C3E50),
                   ),
                 ),
                 const SizedBox(height: 40),
-                // Email Field
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                    fillColor: Colors.white,
-                    filled: true,
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 20),
-                // Username Field
-                TextField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // Password Field
-                TextField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  obscureText: true,
-                  onChanged: _checkPasswordStrength,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "Password Strength: $_passwordStrength",
-                  style: TextStyle(
-                    color: _passwordStrength == "Weak"
-                        ? Colors.red
-                        : _passwordStrength == "Medium"
-                            ? Colors.yellow
-                            : Colors.green,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // Phone Number Field
-                TextField(
-                  controller: _phoneController,
-                  decoration: const InputDecoration(
-                    labelText: 'Phone Number',
-                    border: OutlineInputBorder(),
-                    fillColor: Colors.white,
-                    filled: true,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            labelStyle: const TextStyle(color: Color(0xFF2C3E50)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFF16A085)),
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            labelText: 'Username',
+                            labelStyle: const TextStyle(color: Color(0xFF2C3E50)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFF16A085)),
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            labelStyle: const TextStyle(color: Color(0xFF2C3E50)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFF16A085)),
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                          obscureText: true,
+                          onChanged: _checkPasswordStrength,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Password Strength: $_passwordStrength",
+                          style: TextStyle(
+                            color: _passwordStrength == "Weak"
+                                ? const Color(0xFFE57373)
+                                : _passwordStrength == "Medium"
+                                    ? const Color(0xFFFFB74D)
+                                    : const Color(0xFF81C784),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _phoneController,
+                          decoration: InputDecoration(
+                            labelText: 'Phone Number',
+                            labelStyle: const TextStyle(color: Color(0xFF2C3E50)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Color(0xFF16A085)),
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30),
-                // Register Button
                 _isLoading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 40, vertical: 15),
-                          backgroundColor: Colors.teal,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -203,18 +278,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onPressed: _register,
                         child: const Text(
                           'Register',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(fontSize: 16),
                         ),
                       ),
                 const SizedBox(height: 20),
-                // Navigate to Login Button
                 TextButton(
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/');
                   },
                   child: const Text(
                     "Already have an account? Login",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Color(0xFF2C3E50),
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ],
